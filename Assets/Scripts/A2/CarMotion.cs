@@ -9,92 +9,87 @@ public class CarMotion : MonoBehaviour {
 	public float wheelOmega;
 	public float wheelDisance;
 	public float acceleration;
-	public float sec;
 
+	private Animator carAnimator;
 	private float wheelAngel;
 	private float velocity;
 	private bool autoParking = false;
-	struct Move {
-		public bool forward  ;
-		public bool backword ;
-		public bool brake    ;
-		public bool right    ;
-		public bool left     ;
-		public bool center   ;
-	};
-	private Move move;
+	const short FORWARD = 0, BACKWARD = 1, BRAKE = 2,
+		RIGHT = 3, LEFT = 4, CENTER = 5;
+	bool[] _move = {false, false, false, false, false, false};
+	IEnumerator _Move(short[] acts, float time) {
+		foreach(short act in acts)
+			_move[act] = true;
+		yield return new WaitForSeconds(time);
+		foreach(short act in acts)
+			_move[act] = false;
+	}
+	public IEnumerator Move(short act, float time) {
+		yield return StartCoroutine(_Move(new short[]{act}, time));
+	}
+	public IEnumerator Move(short[] acts, float time) {
+		yield return StartCoroutine(_Move(acts, time));
+	}
 
 	// Use this for initialization
 	void Start () {
-		move = new Move();
-		StartCoroutine(defaultParking());
+		carAnimator = GetComponent<Animator>();
 	}
-	
+
 	IEnumerator defaultParking() {
 		autoParking = true;
-		move.forward = true;
-		yield return new WaitForSeconds(1.2f);
-		move.forward = false;
-		move.brake = true;
-		yield return new WaitForSeconds(2);
-		move.brake = false;
-		move.right = true;
-		yield return new WaitForSeconds(1);
-		move.right = false;
-		move.backword = true;
-		yield return new WaitForSeconds(sec);
-		move.backword = false;
-		move.brake = true;
-		move.center = true;
-		yield return new WaitForSeconds(2);
-		move.brake = false;
-		move.center = false;
-		move.backword = true;
-		yield return new WaitForSeconds(.6f);
-		move.backword = false;
-		move.brake = true;
-		yield return new WaitForSeconds(1f);
-		move.brake = false;
+		yield return Move(FORWARD, 1.25f);
+		yield return Move(BRAKE, 2f);
+		yield return Move(RIGHT, 1f);
+		yield return Move(BACKWARD, 1.45f);
+		yield return Move(new short[]{BRAKE, CENTER}, 2f);
+		yield return Move(BACKWARD, .6f);
+		yield return Move(BRAKE, 1f);
 		autoParking = false;
 	}
 	// Update is called once per frame
 	void OnGUI() {
 		GUI.Label(new Rect(10, 10, 150, 25),velocity.ToString());
 		GUI.Label(new Rect(10, 30, 150, 25),autoParking.ToString());
+		GUI.Label(new Rect(10, 50, 150, 25),wheelAngel.ToString());
 	}
 	void Update () {
 		if (!autoParking) {
 			if (Input.GetKeyDown(KeyCode.UpArrow))
-				move.forward = true;
+				_move[FORWARD] = true;
 			if (Input.GetKeyUp(KeyCode.UpArrow))
-				move.forward = false;
+				_move[FORWARD] = false;
 			if (Input.GetKeyDown(KeyCode.DownArrow))
-				move.backword = true;
+				_move[BACKWARD] = true;
 			if (Input.GetKeyUp(KeyCode.DownArrow))
-				move.backword = false;
+				_move[BACKWARD] = false;
 			if (Input.GetKeyDown(KeyCode.RightArrow))
-				move.right = true;
+				_move[RIGHT] = true;
 			if (Input.GetKeyUp(KeyCode.RightArrow))
-				move.right = false;
+				_move[RIGHT] = false;
 			if (Input.GetKeyDown(KeyCode.LeftArrow))
-				move.left = true;
+				_move[LEFT] = true;
 			if (Input.GetKeyUp(KeyCode.LeftArrow))
-				move.left = false;
+				_move[LEFT] = false;
 			if (Input.GetKeyDown(KeyCode.Space))
-				move.brake = true;
+				_move[BRAKE] = true;
 			if (Input.GetKeyUp(KeyCode.Space))
-				move.brake = false;
+				_move[BRAKE] = false;
+			if (Input.GetKeyDown(KeyCode.C))
+				_move[CENTER] = true;
+			if (Input.GetKeyUp(KeyCode.C))
+				_move[CENTER] = false;
 		}
 
-		if (move.forward)
+		if (_move[FORWARD])
 			velocity += acceleration * Time.deltaTime;
-		if (move.backword)
+		if (_move[BACKWARD])
 			velocity -= acceleration * Time.deltaTime;
-		if (move.right)
+		if (_move[RIGHT])
 			wheelAngel -= wheelOmega * Time.deltaTime;
-		if (move.left)
+		if (_move[LEFT])
 			wheelAngel += wheelOmega * Time.deltaTime;
-		if (move.brake) {
+		if (_move[BRAKE]) {
 			if (velocity > acceleration / 2)
 				velocity -= acceleration * Time.deltaTime;
 			else if (velocity < -acceleration / 2)
@@ -102,32 +97,46 @@ public class CarMotion : MonoBehaviour {
 			else
 				velocity = 0;
 		}
-		if (move.center) {
+		if (_move[CENTER]) {
 			if (wheelAngel > 5)
 				wheelAngel -= wheelOmega * Time.deltaTime;
-			else if (wheelAngel < 5)
+			else if (wheelAngel < -5)
 				wheelAngel += wheelOmega * Time.deltaTime;
 			else
 				wheelAngel = 0;
 		}
 
+		if(Input.GetKeyDown(KeyCode.R)) {
+			transform.position = new Vector3(-6, 0.8f, 0);
+			transform.rotation = new Quaternion(0, 0, 0, 1);
+		}
 		if(Input.GetKeyDown(KeyCode.V) && !autoParking) {
 			autoParking = true;
 			StartCoroutine(defaultParking());
-			Debug.Log(autoParking);
+			autoParking = false;
 		}
 
+		if(wheelAngel < 0) {
+			carAnimator.SetBool("turnLeft", false);
+			carAnimator.SetBool("turnRight", true);
+		} else if(wheelAngel > 0) {
+			carAnimator.SetBool("turnLeft", true);
+			carAnimator.SetBool("turnRight", false);
+		} else {
+			carAnimator.SetBool("turnLeft", false);
+			carAnimator.SetBool("turnRight", false);
+		}
 
 		wheelAngel = Mathf.Clamp(wheelAngel, -45, 45);
 		wheel_FL.transform.localRotation = Quaternion.Euler(0, 0, wheelAngel);
 		wheel_FR.transform.localRotation = Quaternion.Euler(0, 0, wheelAngel);
-		this.transform.Rotate(
+		transform.Rotate(
 			1 / wheelDisance * Mathf.Tan(wheelAngel * Mathf.PI / 180f) *
 			velocity * Vector3.forward * Time.deltaTime * 180f / Mathf.PI);
-		this.transform.Translate(Vector3.right * velocity * Time.deltaTime);
+		transform.Translate(Vector3.right * velocity * Time.deltaTime);
 	}
 
-	public void stop() {
+	public void Stop() {
 		velocity = 0;
 	}
 }

@@ -37,7 +37,7 @@ public class CarCollision : MonoBehaviour {
 	}
 
 	void OnCollisionEnter2D(Collision2D collision) {
-		this.GetComponent<CarMotion>().stop();
+		this.GetComponent<CarMotion>().Stop();
 		colorChange(Color.red);
 	}
 	void OnCollisionExit2D(Collision2D collision) {

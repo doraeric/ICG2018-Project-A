@@ -260,11 +260,10 @@ GameObject:
   m_Component:
   - component: {fileID: 323548856}
   - component: {fileID: 323548855}
-  - component: {fileID: 323548857}
   - component: {fileID: 323548858}
-  - component: {fileID: 323548859}
   - component: {fileID: 323548861}
   - component: {fileID: 323548860}
+  - component: {fileID: 323548857}
   - component: {fileID: 323548862}
   m_Layer: 0
   m_Name: CarOrigin
@@ -372,17 +371,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &323548859
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 323548854}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc4c51e3ab6db45eeb1db042fce3e32f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!61 &323548860
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1341,6 +1329,7 @@ Camera:
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
