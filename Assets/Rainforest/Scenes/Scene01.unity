@@ -744,6 +744,7 @@ GameObject:
   - component: {fileID: 1014874291}
   - component: {fileID: 1014874290}
   - component: {fileID: 1014874296}
+  - component: {fileID: 1014874298}
   - component: {fileID: 1014874297}
   m_Layer: 0
   m_Name: CarOrigin
@@ -915,12 +916,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 1014874289}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 746cfa56f67964810987609d476a4dcc, type: 3}
+  m_Script: {fileID: 11500000, guid: caf4589f197c4486fa3b4c905b2e1dde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  car: {fileID: 1808656123}
-  wheelFL: {fileID: 752223235}
-  wheelFR: {fileID: 1989407905}
+  carSprites:
+  - {fileID: 1808656124}
+  - {fileID: 752223236}
+  - {fileID: 1989407906}
+--- !u!114 &1014874298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1014874289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dce8811b356fc4483acf89c1e88db748, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wheel_FL: {fileID: 752223235}
+  wheel_FR: {fileID: 1989407905}
+  carBody: {fileID: 1808656123}
+  wheelOmega: 40
+  wheelDisance: 0.87
+  acceleration: 1
 --- !u!1 &1024960733
 GameObject:
   m_ObjectHideFlags: 0
