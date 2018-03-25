@@ -9,11 +9,12 @@ public class CarMotion : MonoBehaviour {
 	public float wheelOmega;
 	public float wheelDisance;
 	public float acceleration;
+	public float GetSpeed() { return velocity; }
+	public bool lockInput = false;
 
 	private Animator carAnimator;
 	private float wheelAngel;
 	private float velocity;
-	private bool autoParking = false;
 	const short FORWARD = 0, BACKWARD = 1, BRAKE = 2,
 		RIGHT = 3, LEFT = 4, CENTER = 5;
 	bool[] _move = {false, false, false, false, false, false};
@@ -37,7 +38,7 @@ public class CarMotion : MonoBehaviour {
 	}
 
 	IEnumerator defaultParking() {
-		autoParking = true;
+		lockInput = true;
 		yield return Move(FORWARD, 1.25f);
 		yield return Move(BRAKE, 2f);
 		yield return Move(RIGHT, 1f);
@@ -45,16 +46,20 @@ public class CarMotion : MonoBehaviour {
 		yield return Move(new short[]{BRAKE, CENTER}, 2f);
 		yield return Move(BACKWARD, .6f);
 		yield return Move(BRAKE, 1f);
-		autoParking = false;
+		lockInput = false;
 	}
 	// Update is called once per frame
 	void OnGUI() {
 		GUI.Label(new Rect(10, 10, 150, 25),velocity.ToString());
-		GUI.Label(new Rect(10, 30, 150, 25),autoParking.ToString());
+		GUI.Label(new Rect(10, 30, 150, 25),lockInput.ToString());
 		GUI.Label(new Rect(10, 50, 150, 25),wheelAngel.ToString());
 	}
 	void Update () {
-		if (!autoParking) {
+		if (Input.GetKey(KeyCode.Z)) {
+			EasterEgg egg = GetComponent<EasterEgg>();
+			egg.FindEgg();
+		}
+		if (!lockInput) {
 			if (Input.GetKeyDown(KeyCode.UpArrow))
 				_move[FORWARD] = true;
 			if (Input.GetKeyUp(KeyCode.UpArrow))
@@ -110,10 +115,10 @@ public class CarMotion : MonoBehaviour {
 			transform.position = new Vector3(-6, 0.8f, 0);
 			transform.rotation = new Quaternion(0, 0, 0, 1);
 		}
-		if(Input.GetKeyDown(KeyCode.V) && !autoParking) {
-			autoParking = true;
+		if(Input.GetKeyDown(KeyCode.V) && !lockInput) {
+			lockInput = true;
 			StartCoroutine(defaultParking());
-			autoParking = false;
+			lockInput = false;
 		}
 
 		if(wheelAngel < 0) {
