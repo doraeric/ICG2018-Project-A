@@ -25,7 +25,7 @@ public class EasterEgg : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (carMotion.GetSpeed() > 20f) {
-			carMotion.acceleration += carMotion.acceleration * 0.1f * Time.deltaTime;
+			carMotion.acceleration += carMotion.acceleration * 0.3f * Time.deltaTime;
 			carMotion.lockInput = true;
 			Destroy(carCollider);
 		}
