@@ -27,7 +27,7 @@ public class EasterEggRainforest : MonoBehaviour {
 		if (carMotion.GetSpeed() > 20f) {
 			carMotion.acceleration += carMotion.acceleration * 0.1f * Time.deltaTime;
 			carMotion.slowDownAcc = 0;
-			carMotion.wheelOmega = 40;
+			// carMotion.wheelOmega = 40;
 			// carMotion.lockInput = true;
 			Destroy(carCollider);
 		}

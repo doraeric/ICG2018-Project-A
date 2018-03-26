@@ -78,7 +78,7 @@ public float GetSpeed() { return velocity; }
 			wheelAngle += wheelOmega * Time.deltaTime;
 		}
 		if (Input.GetKeyUp (KeyCode.LeftArrow)) {
-			wheelAngle = 0;
+			// wheelAngle = 0;
 		}
 	}
 	void turnRight () {
@@ -86,7 +86,7 @@ public float GetSpeed() { return velocity; }
 			wheelAngle -= wheelOmega * Time.deltaTime;
 		}
 		if (Input.GetKeyUp (KeyCode.RightArrow)) {
-			wheelAngle = 0;
+			// wheelAngle = 0;
 		}
 	}
 }
