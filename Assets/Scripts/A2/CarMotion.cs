@@ -11,9 +11,10 @@ public class CarMotion : MonoBehaviour {
 	public float acceleration;
 	public float GetSpeed() { return velocity; }
 	public bool lockInput = false;
+	public float slowDownAcc;
 
 	private Animator carAnimator;
-	private float wheelAngel;
+	private float wheelAngle;
 	private float velocity;
 	const short FORWARD = 0, BACKWARD = 1, BRAKE = 2,
 		RIGHT = 3, LEFT = 4, CENTER = 5;
@@ -52,9 +53,34 @@ public class CarMotion : MonoBehaviour {
 	void OnGUI() {
 		GUI.Label(new Rect(10, 10, 150, 25),velocity.ToString());
 		GUI.Label(new Rect(10, 30, 150, 25),lockInput.ToString());
-		GUI.Label(new Rect(10, 50, 150, 25),wheelAngel.ToString());
+		GUI.Label(new Rect(10, 50, 150, 25),wheelAngle.ToString());
+	}
+	void Common () {
+		if (!_move[FORWARD] && !_move[BACKWARD]) {
+			if (velocity >0) {
+				velocity -= slowDownAcc *Time.deltaTime;
+				if (velocity < 0){
+					velocity = 0;
+				}
+			} else {
+				velocity += slowDownAcc *Time.deltaTime;
+				if (velocity > 0){
+					velocity = 0;
+				}
+			}
+		}
+		if (!_move[RIGHT] && !_move[LEFT]) {
+			if (wheelAngle > 5)
+				wheelAngle -= wheelOmega * Time.deltaTime;
+			else if (wheelAngle < -5)
+				wheelAngle += wheelOmega * Time.deltaTime;
+			else
+				wheelAngle = 0;
+		}
 	}
 	void Update () {
+		if (!lockInput)
+			Common();
 		if (Input.GetKey(KeyCode.Z)) {
 			EasterEgg egg = GetComponent<EasterEgg>();
 			egg.FindEgg();
@@ -91,9 +117,9 @@ public class CarMotion : MonoBehaviour {
 		if (_move[BACKWARD])
 			velocity -= acceleration * Time.deltaTime;
 		if (_move[RIGHT])
-			wheelAngel -= wheelOmega * Time.deltaTime;
+			wheelAngle -= wheelOmega * Time.deltaTime;
 		if (_move[LEFT])
-			wheelAngel += wheelOmega * Time.deltaTime;
+			wheelAngle += wheelOmega * Time.deltaTime;
 		if (_move[BRAKE]) {
 			if (velocity > acceleration / 2)
 				velocity -= acceleration * Time.deltaTime;
@@ -103,12 +129,12 @@ public class CarMotion : MonoBehaviour {
 				velocity = 0;
 		}
 		if (_move[CENTER]) {
-			if (wheelAngel > 5)
-				wheelAngel -= wheelOmega * Time.deltaTime;
-			else if (wheelAngel < -5)
-				wheelAngel += wheelOmega * Time.deltaTime;
+			if (wheelAngle > 5)
+				wheelAngle -= wheelOmega * Time.deltaTime;
+			else if (wheelAngle < -5)
+				wheelAngle += wheelOmega * Time.deltaTime;
 			else
-				wheelAngel = 0;
+				wheelAngle = 0;
 		}
 
 		if(Input.GetKeyDown(KeyCode.R)) {
@@ -118,13 +144,12 @@ public class CarMotion : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.V) && !lockInput) {
 			lockInput = true;
 			StartCoroutine(defaultParking());
-			lockInput = false;
 		}
 
-		if(wheelAngel < 0) {
+		if(wheelAngle < 0) {
 			carAnimator.SetBool("turnLeft", false);
 			carAnimator.SetBool("turnRight", true);
-		} else if(wheelAngel > 0) {
+		} else if(wheelAngle > 0) {
 			carAnimator.SetBool("turnLeft", true);
 			carAnimator.SetBool("turnRight", false);
 		} else {
@@ -132,11 +157,11 @@ public class CarMotion : MonoBehaviour {
 			carAnimator.SetBool("turnRight", false);
 		}
 
-		wheelAngel = Mathf.Clamp(wheelAngel, -45, 45);
-		wheel_FL.transform.localRotation = Quaternion.Euler(0, 0, wheelAngel);
-		wheel_FR.transform.localRotation = Quaternion.Euler(0, 0, wheelAngel);
+		wheelAngle = Mathf.Clamp(wheelAngle, -45, 45);
+		wheel_FL.transform.localRotation = Quaternion.Euler(0, 0, wheelAngle);
+		wheel_FR.transform.localRotation = Quaternion.Euler(0, 0, wheelAngle);
 		transform.Rotate(
-			1 / wheelDisance * Mathf.Tan(wheelAngel * Mathf.PI / 180f) *
+			1 / wheelDisance * Mathf.Tan(wheelAngle * Mathf.PI / 180f) *
 			velocity * Vector3.forward * Time.deltaTime * 180f / Mathf.PI);
 		transform.Translate(Vector3.right * velocity * Time.deltaTime);
 	}
