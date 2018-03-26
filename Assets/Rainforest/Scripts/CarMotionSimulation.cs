@@ -14,6 +14,7 @@ public float wheelDistance;
 private float velocity;
 public float acceleration;
 public float slowDownAcc;
+public float GetSpeed() { return velocity; }
 
 
 	// Use this for initialization

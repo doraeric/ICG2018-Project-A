@@ -746,6 +746,7 @@ GameObject:
   - component: {fileID: 1014874296}
   - component: {fileID: 1014874298}
   - component: {fileID: 1014874297}
+  - component: {fileID: 1014874299}
   m_Layer: 0
   m_Name: CarOrigin
   m_TagString: Untagged
@@ -940,6 +941,20 @@ MonoBehaviour:
   wheelOmega: 40
   wheelDisance: 0.87
   acceleration: 1
+--- !u!114 &1014874299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1014874289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b28e8fc971240e097a4f471a3d4e69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  videoToPlay: {fileID: 32900000, guid: 2314636bf0c87441496952d4771a0f9a, type: 3}
+  audio_p1: {fileID: 8300000, guid: 6d74d8b91d9de452fb4504105926b5dc, type: 3}
+  audio_p2: {fileID: 8300000, guid: 80a022fb7612d4bbd9296c65385b7dda, type: 3}
 --- !u!1 &1024960733
 GameObject:
   m_ObjectHideFlags: 0
