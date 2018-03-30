@@ -356,6 +356,7 @@ MonoBehaviour:
   acceleration: 1
   lockInput: 0
   slowDownAcc: 0.5
+  DEBUG: 1
 --- !u!95 &323548858
 Animator:
   serializedVersion: 3

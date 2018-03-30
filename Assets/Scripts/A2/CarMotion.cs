@@ -12,10 +12,12 @@ public class CarMotion : MonoBehaviour {
 	public float GetSpeed() { return velocity; }
 	public bool lockInput = false;
 	public float slowDownAcc;
+	public bool DEBUG = false;
 
 	private Animator carAnimator;
 	private float wheelAngle;
 	private float velocity;
+	private float _acceleration;
 	const short FORWARD = 0, BACKWARD = 1, BRAKE = 2,
 		RIGHT = 3, LEFT = 4, CENTER = 5;
 	bool[] _move = {false, false, false, false, false, false};
@@ -37,6 +39,7 @@ public class CarMotion : MonoBehaviour {
 	void Start () {
 		carAnimator = GetComponent<Animator>();
 		UIManager.Instance.ShowPanel("HelpPanel");
+		_acceleration = acceleration;
 		StartCoroutine(CloseHelp());
 	}
 	IEnumerator CloseHelp() {
@@ -57,9 +60,11 @@ public class CarMotion : MonoBehaviour {
 	}
 	// Update is called once per frame
 	void OnGUI() {
-		GUI.Label(new Rect(10, 10, 150, 25),velocity.ToString());
-		GUI.Label(new Rect(10, 30, 150, 25),lockInput.ToString());
-		GUI.Label(new Rect(10, 50, 150, 25),wheelAngle.ToString());
+		if (DEBUG) {
+			GUI.Label(new Rect(10, 10, 150, 25),velocity.ToString());
+			GUI.Label(new Rect(10, 30, 150, 25),lockInput.ToString());
+			GUI.Label(new Rect(10, 50, 150, 25),wheelAngle.ToString());
+		}
 	}
 	void Common () {
 		if (!_move[FORWARD] && !_move[BACKWARD]) {
@@ -84,13 +89,39 @@ public class CarMotion : MonoBehaviour {
 				wheelAngle = 0;
 		}
 	}
+	void ResetMove() {
+		_move[FORWARD] = false;
+		_move[BACKWARD] = false;
+		_move[BRAKE] = false;
+		_move[RIGHT] = false;
+		_move[LEFT] = false;
+		_move[CENTER] = false;
+		lockInput = false;
+	}
+	public void ResetCar() {
+		ResetMove();
+		transform.position = new Vector3(-6, 0.8f, 0);
+		transform.rotation = new Quaternion(0, 0, 0, 1);
+		velocity = 0;
+		wheelAngle = 0;
+		acceleration = _acceleration;
+	}
 	void Update () {
 		if (!lockInput)
 			Common();
-		if (Input.GetKey(KeyCode.Z)) {
+		if (DEBUG && Input.GetKey(KeyCode.P)) {
 			EasterEgg egg = GetComponent<EasterEgg>();
 			egg.FindEgg();
 		}
+		if(DEBUG && Input.GetKeyDown(KeyCode.R)) {
+			ResetCar();
+		}
+
+		if(Input.GetKeyDown(KeyCode.Z) && !lockInput) {
+			ResetCar();
+			StartCoroutine(defaultParking());
+		}
+
 		if (!lockInput) {
 			if (Input.GetKeyDown(KeyCode.UpArrow))
 				_move[FORWARD] = true;
@@ -141,15 +172,6 @@ public class CarMotion : MonoBehaviour {
 				wheelAngle += wheelOmega * Time.deltaTime;
 			else
 				wheelAngle = 0;
-		}
-
-		if(Input.GetKeyDown(KeyCode.R)) {
-			transform.position = new Vector3(-6, 0.8f, 0);
-			transform.rotation = new Quaternion(0, 0, 0, 1);
-		}
-		if(Input.GetKeyDown(KeyCode.V) && !lockInput) {
-			lockInput = true;
-			StartCoroutine(defaultParking());
 		}
 
 		if(wheelAngle < 0) {

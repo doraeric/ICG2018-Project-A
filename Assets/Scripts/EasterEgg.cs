@@ -27,7 +27,7 @@ public class EasterEgg : MonoBehaviour {
 		if (carMotion.GetSpeed() > 20f) {
 			carMotion.acceleration += carMotion.acceleration * 0.3f * Time.deltaTime;
 			carMotion.lockInput = true;
-			Destroy(carCollider);
+			carCollider.enabled = false;
 		}
 		if (carMotion.GetSpeed() > 100f && !_playingVideo) {
 			FindEgg();
@@ -84,6 +84,8 @@ public class EasterEgg : MonoBehaviour {
 		// This may be removed because there will be new scene
 		carMotion.lockInput = false;
 		_playingVideo = false;
+		carCollider.enabled = true;
+		carMotion.ResetCar();
 		Destroy(this);
 	}
 
