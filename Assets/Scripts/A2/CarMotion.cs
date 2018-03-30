@@ -36,6 +36,12 @@ public class CarMotion : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		carAnimator = GetComponent<Animator>();
+		UIManager.Instance.ShowPanel("HelpPanel");
+		StartCoroutine(CloseHelp());
+	}
+	IEnumerator CloseHelp() {
+		yield return new WaitForSeconds(5.0f);
+		UIManager.Instance.ClosePanel("HelpPanel");
 	}
 
 	IEnumerator defaultParking() {
