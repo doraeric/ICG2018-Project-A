@@ -43,10 +43,6 @@ public class EasterEgg : MonoBehaviour {
 		videoPlayer = mainCamera.AddComponent<VideoPlayer>();
 		audioSource = mainCamera.AddComponent<AudioSource>();
 		audioSource.clip = audio_p1;
-		audioSource.Play();
-		yield return new WaitForSeconds(audio_p1.length);
-
-		audioSource.clip = audio_p2;
 
 		// Play on awake defaults to true. Set it to false to avoid the url set
 		// below to auto-start playback since we're in Start().
@@ -62,7 +58,18 @@ public class EasterEgg : MonoBehaviour {
 		// Set the video to play. URL supports local absolute or relative paths.
 		// Here, using absolute.
 		// videoPlayer.url = "/media/Data/Code/unity/Hello for CE/Assets/all.webm";
-		videoPlayer.clip = videoToPlay;
+#if UNITY_WEBGL
+			videoPlayer.url = "https://doraeric.github.io/icg2018-a/video/part2-v.webm";
+#else
+			videoPlayer.clip = videoToPlay;
+#endif
+
+		// Playing music and prepare video
+		audioSource.Play();
+		videoPlayer.Prepare();
+		yield return new WaitForSeconds(audio_p1.length);
+
+		audioSource.clip = audio_p2;
 
 		// Skip the first 100 frames.
 		// videoPlayer.frame = 100;

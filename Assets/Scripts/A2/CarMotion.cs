@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CarMotion : MonoBehaviour {
+#if UNITY_EDITOR
+	const bool DEBUG = true;
+#else
+	const bool DEBUG = false;
+#endif
+
 	public GameObject wheel_FL;
 	public GameObject wheel_FR;
 	public GameObject carBody;
@@ -12,7 +18,6 @@ public class CarMotion : MonoBehaviour {
 	public float GetSpeed() { return velocity; }
 	public bool lockInput = false;
 	public float slowDownAcc;
-	public bool DEBUG = false;
 
 	private Animator carAnimator;
 	private float wheelAngle;
