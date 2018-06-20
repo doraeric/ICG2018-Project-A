@@ -118,12 +118,11 @@ public class CarMotion : MonoBehaviour {
 			EasterEgg egg = GetComponent<EasterEgg>();
 			egg.FindEgg();
 		}
-		if(DEBUG && Input.GetKeyDown(KeyCode.R)) {
+		if (!lockInput && Input.GetKeyDown(KeyCode.R)) {
 			ResetCar();
 		}
 
-		if(Input.GetKeyDown(KeyCode.Z) && !lockInput) {
-			ResetCar();
+		if (!lockInput && Input.GetKeyDown(KeyCode.Z)) {
 			StartCoroutine(defaultParking());
 		}
 
