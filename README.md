@@ -29,3 +29,8 @@ Hint: 和車子的速度有關喔OwO
 
 [Game link](https://doraeric.github.io/icg2018-a/)
 
+### Screenshots
+
+(?)
+
+![screenshot01](https://user-images.githubusercontent.com/16789570/42329507-633aa3b0-80a3-11e8-8a36-56acd146df4d.jpg)
